@@ -1,18 +1,18 @@
 import React from 'react';
+import socket from '../context/socket';
 
-import io from 'socket.io-client'
+import Chat from '../components/Chat';
 
-export default class Main extends React.Component{
-    constructor(props){
+export default class Main extends React.Component {
+    constructor(props) {
         super(props);
     }
-    componentDidMount(){
-        this.socket = io();
-    }
 
-    render(){
-        return(
-            <div>11111</div>
+    render() {
+        return (
+            <div>
+                <Chat />
+            </div>
         )
     }
 }
