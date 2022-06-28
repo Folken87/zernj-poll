@@ -1,13 +1,29 @@
 {
-  "private": true,
+  "name": "zernj_pool",
+  "version": "1.0.0",
+  "description": "Тут будет проект для дипломного проекта с чатом и опросами",
+  "main": "index.js",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
+    "dev": "node server.js",
+    "build": "next dev",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Folken87/zernj_pool.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Folken87/zernj_pool/issues"
+  },
+  "homepage": "https://github.com/Folken87/zernj_pool#readme",
   "dependencies": {
-    "next": "latest",
-    "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "express": "^4.18.1",
+    "next": "^12.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "socket.io": "^4.5.1",
+    "socket.io-client": "^4.5.1"
   }
 }
