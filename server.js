@@ -2,7 +2,7 @@ const app = require('express')();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const next = require('next');
-const { Pool, Client } = require('pg')
+const { Pool, Client } = require('pg');
 
 const dev = process.env.NODE_ENV != 'production';
 const nextApp = next({ dev });
@@ -16,6 +16,15 @@ io.on('connect', socket => {
         pool.query('SELECT * FROM public.rooms', (err, res) => {
             socket.emit("loadRooms", {
                 rooms: res.rows
+            });
+            // pool.end(() => { })
+        });
+    })
+    socket.on("auth", authParams => {
+        const queryText = 'SELECT id, name FROM public.users WHERE name = $1 AND password = $2'
+        pool.query(queryText, authParams, (err, res) => {
+            socket.emit("loadAuth", {
+                result: res.rows
             });
             // pool.end(() => { })
         });
