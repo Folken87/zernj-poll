@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "node server.js",
     "build": "next dev",
+    "tt": "node server.js && next dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,6 +20,7 @@
   },
   "homepage": "https://github.com/Folken87/zernj_pool#readme",
   "dependencies": {
+    "bootstrap": "^5.1.3",
     "express": "^4.18.1",
     "next": "^12.2.0",
     "pg": "^8.7.3",
