@@ -1,0 +1,27 @@
+.customChat {
+    background-color: white;
+    height: 64.815vmin;/* 700 */
+    box-shadow: 0 0.093vmin 0.185vmin 0 rgb(0 0 0 / 10%);
+    border-radius: 0.55rem;
+    padding: 1.852vmin!important;
+}
+.roomList {
+    overflow-y: auto;
+    height: 46.296vmin;
+}
+
+.room {
+    height: 6.019vmin;
+    border-radius: 0.278vmin;
+    padding: 0.926vmin 1.389vmin;
+    transition-duration: 0.3s;
+}
+
+.room:hover{
+    background-color: #efefef;
+    transition-duration: 0.3s;
+}
+
+.roomChat {
+    border-left: 0.185vmin solid #eaeaea;
+}
