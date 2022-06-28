@@ -25,3 +25,43 @@
 .roomChat {
     border-left: 0.185vmin solid #eaeaea;
 }
+
+.roomChatHeader {
+    height: 6.481vmin;
+    border-bottom: 0.185vmin solid #eaeaea;
+    padding: 1.389vmin 1.852vmin;
+}
+.roomChatBody{
+    padding: 1.389vmin 1.852vmin;
+    flex-wrap: wrap;
+}
+.message {
+    width: 100%;
+}
+.my-message {
+    background: #efefef
+}
+
+.my-message:after {
+    bottom: 100%;
+    left: 30px;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border-bottom-color: #efefef;
+    border-width: 10px;
+    margin-left: -10px
+}
+
+.other-message {
+    background: #e8f1f3;
+    text-align: right
+}
+
+.other-message:after {
+    border-bottom-color: #e8f1f3;
+    left: 93%
+}

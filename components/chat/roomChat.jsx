@@ -4,6 +4,30 @@ import Message from './Message';
 export default class RoomChat extends React.Component{
     constructor(props){
         super(props);
+        this.state = {
+            messages:[
+                {
+                    info: "",
+                    text: "ssssssssssssss"
+                },
+                {
+                    info: "",
+                    text: "ssssssssssssss"
+                },
+                {
+                    info: "",
+                    text: "ssssssssssssss"
+                },
+                {
+                    info: "",
+                    text: "ssssssssssssss"
+                },
+                {
+                    info: "",
+                    text: "ssssssssssssss"
+                },
+            ]
+        }
     }
     render(){
         return(
@@ -12,8 +36,8 @@ export default class RoomChat extends React.Component{
                     {this.props.name}
                 </div>
                 <div className="d-flex flex-row roomChatBody">
-                    {this.props.messages && this.props.messages.map((el)=>{
-                        return <Message />
+                    {this.state.messages && this.state.messages.map((el, index)=>{
+                        return <Message key={index} info={el.info} text={el.text} />
                     })}
                 </div>
                 <div className='d-flex flex-row roomChatInput'></div>
