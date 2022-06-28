@@ -20,8 +20,29 @@ io.on('connect', socket => {
             // pool.end(() => { })
         });
     })
+
+    //авторизация
     socket.on("auth", authParams => {
         const queryText = 'SELECT id, name FROM public.users WHERE name = $1 AND password = $2'
+        pool.query(queryText, authParams, (err, res) => {
+            socket.emit("loadAuth", {
+                result: res.rows
+            });
+            // pool.end(() => { })
+        });
+    })
+
+    //регистрация
+    socket.on("registration", authParams => {
+        const queryText = `DO \
+        $do$ \
+        BEGIN \
+            IF EXISTS (SELECT FROM public.users WHERE name = '$1') THEN \
+                INSERT INTO public.users(name, role, password) \
+                    VALUES ('$1', '1', '$2'); \
+            END IF; \
+        END \
+        $do$;`
         pool.query(queryText, authParams, (err, res) => {
             socket.emit("loadAuth", {
                 result: res.rows
