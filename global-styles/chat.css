@@ -37,6 +37,7 @@
     padding: 1.389vmin 1.852vmin;
     flex-wrap: wrap;
     height: 44.741vmin;
+    align-content: flex-end;
 }
 
 .roomChatInput {

@@ -9,23 +9,7 @@ class Chat extends React.Component {
         super(props);
         this.state = {
             currentRoom: -1,
-            rooms: [
-                // {
-                //     id: 0,
-                //     img: "",
-                //     name: "Room 1",
-                // },
-                // {
-                //     id: 1,
-                //     img: "",
-                //     name: "Room 2"
-                // },
-                // {
-                //     id: 2,
-                //     img: "",
-                //     name: "Room 3"
-                // },
-            ]
+            rooms: []
         }
     }
     componentDidMount() {

@@ -38,6 +38,13 @@ export default class RoomChat extends React.Component {
         this.inputRef = React.createRef();
     }
     componentDidMount() {
+        socket.on("newMessage", data =>{
+            // console.log(data);
+            this.state.messages.push(data.result[0])
+            this.setState({
+                messages: this.state.messages
+            })
+        })
         socket.on("loadMessages", data => {
             this.setState({
                 messages: data.result

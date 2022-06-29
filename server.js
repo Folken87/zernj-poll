@@ -64,14 +64,19 @@ io.on('connect', socket => {
 
     socket.on("sendMsg", msgParams => {
         console.log(msgParams);
-        const queryText = `INSERT INTO public.messages (owner, room, "textMessage", "sendDate") VALUES (${msgParams.userId}, ${msgParams.roomId}, '${msgParams.message}', NOW())`
+        let date =new Date();
+        const queryText = `INSERT INTO public.messages (owner, room, "textMessage", "sendDate") VALUES (${msgParams.userId}, ${msgParams.roomId}, '${msgParams.message}', NOW()) RETURNING "sendDate"`
         console.log(queryText);
         pool.query(queryText, (err, res) => {
             console.log(err);
-            // socket.emit("loadMessages", {
-            //     result: res.rows
-            // });
-            // pool.end(() => { })
+            socket.broadcast.emit("newMessage", {
+                result: [{
+                    owner: msgParams.userId,
+                    room: msgParams.roomId, 
+                    textMessage: msgParams.message,
+                    sendDate: res.rows[0].sendDate
+                }]
+            });
         });
     })
 })
