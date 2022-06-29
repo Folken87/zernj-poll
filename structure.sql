@@ -67,3 +67,6 @@ TABLESPACE pg_default;
 
 ALTER TABLE public.messages
     OWNER to postgres;
+
+ALTER TABLE public.messages
+    ALTER COLUMN "sendDate" TYPE timestamp without time zone ;
