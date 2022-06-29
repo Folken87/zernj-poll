@@ -9,31 +9,6 @@ export default class RoomChat extends React.Component {
         this.state = {
             currentMessage: "",
             messages: [
-                // {
-                //     id: 0,
-                //     info: "",
-                //     text: "ssssssssssssss"
-                // },
-                // {
-                //     id: 0,
-                //     info: "",
-                //     text: "ssssssssssssss"
-                // },
-                // {
-                //     id: 0,
-                //     info: "",
-                //     text: "ssssssssssssss"
-                // },
-                // {
-                //     id: 0,
-                //     info: "",
-                //     text: "ssssssssssssss"
-                // },
-                // {
-                //     id: 1,
-                //     info: "",
-                //     text: "ssssssssssssss"
-                // },
             ]
         }
         this.inputRef = React.createRef();
@@ -99,7 +74,7 @@ export default class RoomChat extends React.Component {
                 <div className="d-flex flex-row roomChatBody" ref={this.chatBoxRef}>
                     {this.state.messages
                         && this.state.messages.map((el, index) => {
-                            console.log(el);
+                            // console.log(el);
                             switch (el.type) {
                                 case 0:
                                     return <Message
