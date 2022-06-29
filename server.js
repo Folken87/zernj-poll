@@ -74,7 +74,8 @@ io.on('connect', socket => {
                     owner: msgParams.userId,
                     room: msgParams.roomId,
                     textMessage: msgParams.message,
-                    sendDate: res.rows[0].sendDate
+                    sendDate: res.rows[0].sendDate,
+                    type: 0
                 }]
             });
         });
@@ -129,36 +130,43 @@ io.on('connect', socket => {
 
     //выбор пользователем пункта голосования
     socket.on("setAnswer", setAnswerParams => {
-        const queryText = `INSERT INTO public.votes ("userId", "idVote", "idAnswer") VALUES (${setAnswerParams.userId}, ${setAnswerParams.voteId}, ${setAnswerParams.answerId})`
-        pool.query(queryText, (err, res) => {
-
-        });
+        const queryText = `INSERT INTO public.votes ("userId", "idVote", "idAnswer") \
+        VALUES (${setAnswerParams.userId}, ${setAnswerParams.voteId}, ${setAnswerParams.answerId})\
+        RETURNING *;`
+        pool.query(queryText).then(res => {
+            getVoting(socket, {
+                id: parseInt(res.rows[0].idVote),
+                userId: parseInt(res.rows[0].userId)
+            });
+        })
     })
     socket.on("getVoting", data => {
-        console.log(data);
-        pool.query(`\
-        SELECT "userId" FROM public.votes \
-        WHERE "userId" = ${data.userId} and "idVote" = ${data.id}
-        `).then(res2 => {
-            let voted = false;
-            if (res2.rowCount > 0) voted = true;
-            pool.query(`\
-            SELECT ans.id, vt."nameVote", COUNT(vts.id), \
-            ans."answerValue" FROM public.votings vt \
-            LEFT JOIN public.answers ans ON vt.id = ans."idVote" \
-            LEFT JOIN public.votes vts ON vt.id = vts."idVote" \
-            WHERE vt.id = ${data.id} \
-            GROUP BY ans.id, vt."nameVote", ans."answerValue" \
-            `).then(res => {
-                socket.emit("loadVoting", {
-                    voted: voted,
-                    rows: res.rows
-                })
-            })
-        })
-
+        getVoting(socket, data);
     })
 })
+
+function getVoting(socket, data) {
+    pool.query(`\
+    SELECT "userId" FROM public.votes \
+    WHERE "userId" = ${data.userId} and "idVote" = ${data.id}
+    `).then(res2 => {
+        let voted = false;
+        if (res2.rowCount > 0) voted = true;
+        pool.query(`\
+        SELECT vt.id as "votingId", ans.id, vt."nameVote", COUNT(vts.id), \
+        ans."answerValue" FROM public.votings vt \
+        LEFT JOIN public.answers ans ON vt.id = ans."idVote" \
+        LEFT JOIN public.votes vts ON vt.id = vts."idVote" and ans.id = vts."idAnswer" \
+        WHERE vt.id = ${data.id} \
+        GROUP BY vt.id, ans.id, vt."nameVote", ans."answerValue" \
+        `).then(res => {
+            socket.emit("loadVoting", {
+                voted: voted,
+                rows: res.rows
+            })
+        })
+    })
+}
 
 const pool = new Pool({
     user: 'postgres',

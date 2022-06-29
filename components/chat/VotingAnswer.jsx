@@ -16,7 +16,9 @@ export default class VotingAnswer extends React.Component {
                             }}
                             
                         >
-                            {this.props.text}
+                            <p>{this.props.text} | {this.props.count} ответа/ов <br/>
+                            {this.props.percent.toFixed(0)}%
+                            </p>
                         </div>
                     ) : (
                         <span onClick={() => this.props.setAnswer()}>{this.props.text}</span>

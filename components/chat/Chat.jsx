@@ -14,7 +14,7 @@ class Chat extends React.Component {
     }
     componentDidMount() {
         socket.on("newMessage", data => {
-            console.log(data);
+            // console.log(data);
             let res = data.result[0];
             let room = this.state.rooms.findIndex(el => el.id === res.room);
             if (room === -1) return false;

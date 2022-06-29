@@ -114,6 +114,7 @@
 }
 
 .voting .progress {
+    position: relative;
     width: 75%;
     height: fit-content;
     margin-bottom: 0.926vmin;
@@ -122,6 +123,8 @@
 
 .voting .progress .progress-bar {
     padding: 0.926vmin 0px;
+    height: 4.63vmin;
+    background-color: rgb(215, 238, 192);
 }
 
 .voting .progress > span {
@@ -134,4 +137,13 @@
     cursor: pointer;
     background-color: #b2bec8!important;
     transition-duration: 0.3s;
+}
+
+.voting .progress .progress-bar > p {
+    position: absolute;
+    /* color: black; */
+    font-weight: 500;
+    color: gray;
+    margin: 0;
+    width: 100%;
 }

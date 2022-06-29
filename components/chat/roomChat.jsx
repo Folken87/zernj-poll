@@ -8,27 +8,79 @@ export default class RoomChat extends React.Component {
         super(props);
         this.state = {
             currentMessage: "",
-            messages: [
-            ]
+            messages: [],
+            votings: [],
+            onLoadVotings: []
         }
         this.inputRef = React.createRef();
         this.chatBoxRef = React.createRef();
     }
     componentDidMount() {
         socket.on("newMessage", data => {
-            if (data.result[0].room !== this.props.roomId) return false;
-
+            // console.log("newMessage");
+            // console.log(this.props);
+            if (parseInt(data.result[0].room) !== parseInt(this.props.roomId)) return false;
             this.state.messages.push(data.result[0])
             this.setState({
                 messages: this.state.messages
             }, () => this.scrollChatToBottom())
         })
+        socket.on("loadVoting", data => {
+            let voted = data.voted;
+            let rows = data.rows;
+            let voting = {
+                id: -1,
+                voted: voted,
+                name: "",
+                answers: [],
+                sum: 0
+            }
+            // this.state.answers = [];
+            rows.forEach(el => {
+                voting.id = parseInt(el.votingId);
+                voting.name = el.nameVote;
+                voting.answers.push({
+                    id: parseInt(el.id),
+                    text: el.answerValue,
+                    count: parseInt(el.count)
+                })
+                voting.sum += parseInt(el.count);
+            });
+
+            let oldVoting = this.state.votings.findIndex(el => el.id === voting.id);
+            if (oldVoting !== -1) this.state.votings.splice(oldVoting, 1);
+
+
+            this.state.votings.push(voting);
+            let olvIndex = this.state.onLoadVotings.indexOf(voting.id);
+            if (olvIndex !== -1) this.state.onLoadVotings.splice(olvIndex, 1);
+            this.setState({
+                onLoadVotings: this.state.onLoadVotings,
+                votings: this.state.votings
+            }, () => this.scrollChatToBottom())
+            // this.setState({
+            //     name: this.state.name,
+            //     voted: voted,
+            //     answers: this.state.answers
+            // })
+        });
         socket.on("loadMessages", data => {
             this.setState({
-                messages: data.result
+                messages: data.result,
+                votings: []
             }, () => this.scrollChatToBottom())
         })
         socket.emit("getMessages", this.props.roomId);
+    }
+    getVoting(votingId, userId) {
+        this.state.onLoadVotings.push(votingId);
+        this.setState({
+            onLoadVotings: this.state.onLoadVotings
+        })
+        socket.emit("getVoting", {
+            id: votingId,
+            userId: userId
+        })
     }
     scrollChatToBottom() {
         this.chatBoxRef.current.scrollTop = this.chatBoxRef.current.scrollHeight;
@@ -69,7 +121,7 @@ export default class RoomChat extends React.Component {
             <React.Fragment>
                 <div className='d-flex flex-row roomChatHeader'>
                     {this.props.name}
-                    <button type="button" class="btn btn-primary" onClick={() => this.props.switchModal("createvoting" + " " + this.props.roomId)}>Создать голосование</button>
+                    <button type="button" className="btn btn-primary" onClick={() => this.props.switchModal("createvoting" + " " + this.props.roomId)}>Создать голосование</button>
                 </div>
                 <div className="d-flex flex-row roomChatBody" ref={this.chatBoxRef}>
                     {this.state.messages
@@ -85,13 +137,31 @@ export default class RoomChat extends React.Component {
                                         name={el.name ? el.name : ""}
                                     />
                                 case 1:
-                                    return <Voting 
-                                    myMsg={this.props.userId === el.owner}
-                                    userId={this.props.userId}
-                                    key={index}
-                                    name={el.name ? el.name : ""} 
-                                    votingId={parseInt(el.textMessage)}
-                                    />
+                                    if (this.state.onLoadVotings.includes(parseInt(el.textMessage))) return null;
+                                    let voting = this.state.votings.find((el2) => el2.id === parseInt(el.textMessage));
+                                    if (voting) {
+                                        return <Voting
+                                            voted={voting.voted}
+                                            myMsg={this.props.userId === el.owner}
+                                            userId={this.props.userId}
+                                            votingId={voting.id}
+                                            key={index}
+                                            name={voting.name}
+                                            answers={voting.answers}
+                                            sum={voting.sum}
+                                        />
+                                    } else {
+                                        return this.getVoting(parseInt(el.textMessage), parseInt(this.props.userId))
+                                    }
+                                    break;
+                                // return <Voting
+                                //     voted={}
+                                //     myMsg={this.props.userId === el.owner}
+                                //     userId={this.props.userId}
+                                //     votingId={parseInt(el.textMessage)}
+                                //     key={index}
+                                //     name={el.name ? el.name : ""}
+                                // />
                             }
 
                         })}

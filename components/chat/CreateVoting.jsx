@@ -44,28 +44,28 @@ export default class CreateVoting extends React.Component {
     render() {
         return (
             <div className='modalGlobal'>
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Создание голосования</h5>
+                <div className="modal-content">
+                    <div className="modal-header">
+                        <h5 className="modal-title">Создание голосования</h5>
                     </div>
-                    <div class="modal-body">
-                        <div class="input-group mb-3">
-                            <span class="input-group-text"
+                    <div className="modal-body">
+                        <div className="input-group mb-3">
+                            <span className="input-group-text"
                                 id="inputGroup-sizing-default">Название</span>
-                            <input ref={this.inputRef} type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+                            <input ref={this.inputRef} type="text"className="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
                         </div>
                         {
                             this.state.answers.map((el, index) => {
                                 return (
-                                    <input type="text" class="form-control mb-1" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" onChange={(e) => this.updateAnswerText(e, index)} />
+                                    <input type="text" className="form-control mb-1" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" onChange={(e) => this.updateAnswerText(e, index)} />
                                 )
                             })
                         }
-                        <button type="button" class="btn btn-success btn-sm bold mt-1 mb-1" onClick={() => this.addNewAnswer()}>+</button>
+                        <button type="button" className="btn btn-success btn-sm bold mt-1 mb-1" onClick={() => this.addNewAnswer()}>+</button>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" onClick={() => this.props.switchModal("")}>Отмена</button>
-                        <button type="button" class="btn btn-primary" onClick={() => this.createNewVoting()}>Создать</button>
+                    <div className="modal-footer">
+                        <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={() => this.props.switchModal("")}>Отмена</button>
+                        <button type="button" className="btn btn-primary" onClick={() => this.createNewVoting()}>Создать</button>
                     </div>
                 </div>
             </div>
