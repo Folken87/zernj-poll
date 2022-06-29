@@ -53,7 +53,7 @@ io.on('connect', socket => {
 
     //авторизация
     socket.on("getMessages", roomId => {
-        const queryText = `SELECT * FROM public.messages WHERE room = ${roomId}`
+        const queryText = `SELECT public.messages.*, public.users.name FROM public.messages LEFT JOIN public.users ON public.messages.owner = public.users.id WHERE room = ${roomId}`
         pool.query(queryText, (err, res) => {
             socket.emit("loadMessages", {
                 result: res.rows
