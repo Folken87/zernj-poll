@@ -116,3 +116,10 @@ ALTER TABLE IF EXISTS public.votings
 --добавил столбец "Тип сообщения" в messages
 ALTER TABLE IF EXISTS public.messages
     ADD COLUMN type integer NOT NULL DEFAULT 0;
+
+
+--поменял PK у таблицы Anwers
+ALTER TABLE IF EXISTS public.answers DROP CONSTRAINT IF EXISTS answers_pkey;
+
+ALTER TABLE IF EXISTS public.answers
+    ADD PRIMARY KEY (id);
