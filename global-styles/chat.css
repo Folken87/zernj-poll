@@ -37,7 +37,7 @@
     padding: 1.389vmin 1.852vmin;
     flex-wrap: wrap;
     height: 44.741vmin;
-    align-content: flex-end;
+    /* align-content: flex-end; */
 }
 
 .roomChatInput {
@@ -59,11 +59,20 @@
     font-size: 1.681vmin;
     border-radius: 0.648vmin;
 }
-.my-message {
+.message .messageAuthor {
+    justify-content: end;
+}
+.message .messageInfo {
+    justify-content: end;
+    font-size: 1.296vmin;
+    font-weight: 700;
+    color: gray;
+}
+.message .my-message {
     background: #efefef;
 }
 
-.other-message {
+.message .other-message {
     background: #e8f1f3;
     right: 0;
 }

@@ -1,13 +1,16 @@
 import React from 'react';
 
-export default class Message extends React.Component{
-    constructor(props){
+export default class Message extends React.Component {
+    constructor(props) {
         super(props);
     }
-    render(){
-        return(
+    render() {
+        return (
             <div className={`d-flex flex-row message ${this.props.myMsg ? 'justify-content-end' : 'justify-content-start'}`}>
                 <div className='d-flex flex-column'>
+                    <div className='d-flex flex-row messageAuthor'>
+                        <span>{this.props.name}</span>
+                    </div>
                     <div className='d-flex flex-row messageInfo'>
                         {this.props.info}
                     </div>

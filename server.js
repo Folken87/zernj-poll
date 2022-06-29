@@ -63,13 +63,10 @@ io.on('connect', socket => {
     })
 
     socket.on("sendMsg", msgParams => {
-        console.log(msgParams);
         let date =new Date();
         const queryText = `INSERT INTO public.messages (owner, room, "textMessage", "sendDate") VALUES (${msgParams.userId}, ${msgParams.roomId}, '${msgParams.message}', NOW()) RETURNING "sendDate"`
-        console.log(queryText);
         pool.query(queryText, (err, res) => {
-            console.log(err);
-            socket.broadcast.emit("newMessage", {
+            io.emit("newMessage", {
                 result: [{
                     owner: msgParams.userId,
                     room: msgParams.roomId, 

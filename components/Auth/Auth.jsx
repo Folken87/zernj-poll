@@ -44,15 +44,15 @@ export default class Auth extends React.Component {
                 <div className="d-flex flex-column h-100 p-3 justify-content-center align-items-center">
                     {this.state.currentTab == 0 ?
                         <>
-                            <input key={0} type="text" name="" className="form-control" placeholder="Логин" onChange={(e)=>this.changeLogin(e.target.value)} />
-                            <input key={1} type="text" name="" className="form-control" placeholder="Пароль" onChange={(e)=>this.changePassword(e.target.value)} />
+                            <input key={0} autoComplete="new-password" type="text" name="" className="form-control" placeholder="Логин" onChange={(e)=>this.changeLogin(e.target.value)} />
+                            <input key={1} autoComplete="new-password" type="password" name="" className="form-control" placeholder="Пароль" onChange={(e)=>this.changePassword(e.target.value)} />
                             <button className="btn btn-dark btn-block" onClick={()=>this.clickLogin()}>Авторизоваться</button>
 
                         </> :
                         <>
-                            <input key={2} type="text" name="" className="form-control" placeholder="Логин" />
-                            <input key={3} type="text" name="" className="form-control" placeholder="Пароль" />
-                            <input key={4} type="text" name="" className="form-control" placeholder="Повторите пароль" />
+                            <input key={2} autoComplete="new-password" type="text" name="" className="form-control" placeholder="Логин" />
+                            <input key={3} autoComplete="new-password" type="password" name="" className="form-control" placeholder="Пароль" />
+                            <input key={4} autoComplete="new-password" type="password" name="" className="form-control" placeholder="Повторите пароль" />
                             <button className="btn btn-dark btn-block">Зарегистрироваться</button>
                         </>}
                 </div>

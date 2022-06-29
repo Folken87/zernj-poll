@@ -36,21 +36,28 @@ export default class RoomChat extends React.Component {
             ]
         }
         this.inputRef = React.createRef();
+        this.chatBoxRef = React.createRef();
     }
     componentDidMount() {
-        socket.on("newMessage", data =>{
-            // console.log(data);
+        socket.on("newMessage", data => {
+            console.log(data);
+            if (data.result[0].room !== this.props.roomId) return false;
+
+            console.log(this.props.roomId);
             this.state.messages.push(data.result[0])
             this.setState({
                 messages: this.state.messages
-            })
+            }, () => this.scrollChatToBottom())
         })
         socket.on("loadMessages", data => {
             this.setState({
-                messages: data.result
-            })
+                messages: data.result.reverse()
+            }, () => this.scrollChatToBottom())
         })
         socket.emit("getMessages", this.props.roomId);
+    }
+    scrollChatToBottom() {
+        this.chatBoxRef.current.scrollTop = this.chatBoxRef.current.scrollHeight;
     }
     sendMessage() {
         if (this.state.currentMessage.length == 0) return false;
@@ -74,20 +81,31 @@ export default class RoomChat extends React.Component {
             this.sendMessage();
         }
     };
+    getFormattedDate(str) {
+        let date = new Date(str);
+        return date.getDate() +
+            "/" + (date.getMonth() + 1) +
+            "/" + date.getFullYear() +
+            " " + date.getHours() +
+            ":" + date.getMinutes() +
+            ":" + date.getSeconds()
+    }
     render() {
         return (
             <React.Fragment>
                 <div className='d-flex flex-row roomChatHeader'>
                     {this.props.name}
                 </div>
-                <div className="d-flex flex-row roomChatBody">
+                <div className="d-flex flex-row roomChatBody" ref={this.chatBoxRef}>
                     {this.state.messages
                         && this.state.messages.map((el, index) => {
                             return <Message
                                 myMsg={this.props.userId === el.owner}
                                 key={index}
-                                info={el.sendDate}
-                                text={el.textMessage} />
+                                info={this.getFormattedDate(el.sendDate)}
+                                text={el.textMessage}
+                                name={el.name ? el.name : ""}
+                            />
                         })}
                 </div>
                 <div className='d-flex flex-row roomChatInput'>

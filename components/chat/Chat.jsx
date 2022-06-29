@@ -50,7 +50,7 @@ class Chat extends React.Component {
                 <div className='d-flex flex-column col-9 roomChat'>
                     {this.state.currentRoom !== -1
                         &&
-                        <RoomChat roomId={room.id} userId={this.props.userId} name={room.name} />
+                        <RoomChat key={room.id} roomId={room.id} userId={this.props.userId} name={room.name} />
                     }
                 </div>
             </div>
