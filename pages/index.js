@@ -54,7 +54,7 @@ export default class Main extends React.Component {
                 {!this.state.auth && <Auth setAuth={() => this.setAuth()} />}
                 {this.state.auth &&
                     <>
-                        <Chat userId={this.state.id} switchModal={(e) => this.switchModal(e)} />
+                        <Chat userId={this.state.id} name={this.state.name} switchModal={(e) => this.switchModal(e)} />
                         {modal}
                     </>
                 }

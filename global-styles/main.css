@@ -1,5 +1,9 @@
 body {
     background-color: #f4f7f6!important;
+    font-size: 1.481vmin!important;
+}
+span, p, text, button, input {
+    font-size: 1.481vmin!important;
 }
 ::-webkit-scrollbar {
     width: 4px; /* ширина scrollbar */

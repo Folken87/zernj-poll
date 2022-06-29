@@ -57,7 +57,7 @@ export default class CreateVoting extends React.Component {
                         {
                             this.state.answers.map((el, index) => {
                                 return (
-                                    <input type="text" className="form-control mb-1" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" onChange={(e) => this.updateAnswerText(e, index)} />
+                                    <input key={index} type="text" className="form-control mb-1" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" onChange={(e) => this.updateAnswerText(e, index)} />
                                 )
                             })
                         }

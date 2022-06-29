@@ -12,7 +12,7 @@ export default class VotingAnswer extends React.Component {
                         <div className="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
                             style={{
                                 width: this.props.percent + '%',
-                                cursor: this.props.voted ? "none" : "pointer"
+                                cursor: this.props.voted ? "default" : "pointer"
                             }}
                             
                         >

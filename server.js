@@ -98,18 +98,22 @@ io.on('connect', socket => {
     socket.on("createVoting", votingParams => {
         let queryText = `INSERT INTO public.votings ("nameVote", "roomId") \
         VALUES ('${votingParams.name}', '${votingParams.roomId}') RETURNING *;`;
-        pool.query(queryText,)
+        pool.query(queryText)
             .then(res => {
+                queryText = `INSERT INTO public.answers ("answerValue", "idVote") \
+                                VALUES `;
+                let str = "";
                 votingParams.answers.forEach(el => {
-                    let queryText = `INSERT INTO public.answers ("answerValue", "idVote") \
-                                VALUES ('${el.text}', ${res.rows[0].id})`
-                    pool.query(queryText).then(res2 => {
-                        // socket.emit("loadMessages", {
-                        //     result: res2.rows
-                        // });
-                    })
+                    str += `('${el.text}', ${res.rows[0].id})`;
+                    str += ", ";
                 });
-                let queryText = `INSERT INTO public.messages (owner, room, "textMessage", type, "sendDate") \
+                str = str.substring(0, str.length - 2);
+                str += ";";
+                queryText += str;
+                console.log(queryText);
+                pool.query(queryText).then(res2 => {
+                })
+                queryText = `INSERT INTO public.messages (owner, room, "textMessage", type, "sendDate") \
                 VALUES (${votingParams.userId}, ${votingParams.roomId}, '${res.rows[0].id}', 1, NOW()) RETURNING "sendDate"`
                 pool.query(queryText).then(res2 => {
                     io.emit("newMessage", {
@@ -122,9 +126,6 @@ io.on('connect', socket => {
                         }]
                     });
                 })
-                // socket.emit("loadMessages", {
-                //     result: res.rows
-                // });
             })
     })
 
@@ -143,6 +144,42 @@ io.on('connect', socket => {
     socket.on("getVoting", data => {
         getVoting(socket, data);
     })
+
+    socket.on("joinRoom", data => {
+        let usersMap = allRooms.get(data.roomId);
+        usersMap.set(data.userId, data.name);
+        allRooms.set(data.roomId, usersMap);
+        io.emit("updateRoom", {
+            roomId: data.roomId,
+            usersMap: usersMap
+        })
+        // arr.push({ userId: data.userId, name: data.name });
+        // allRooms.set(data.roomId, arr);
+        // io.emit("updateRoom", {
+        //     roomId: data.roomId,
+        //     arr: arr
+        // })
+    })
+    socket.on("leaveRoom", data => {
+        let usersMap = allRooms.get(data.roomId);
+        if (usersMap.has(data.userId)) {
+            usersMap.delete(data.userId);
+        }
+        allRooms.set(data.roomId, usersMap);
+
+        io.emit("updateRoom", {
+            roomId: data.roomId,
+            usersMap: usersMap
+        })
+    })
+
+    socket.on("getRoomUsers", data => {
+        let usersMap = allRooms.get(data.roomId);
+        console.log(usersMap);
+        console.log(Array.from(usersMap.values()));
+        socket.emit("loadRoomUsers", { users: Array.from(usersMap.values()) });
+    })
+
 })
 
 function getVoting(socket, data) {
@@ -175,7 +212,18 @@ const pool = new Pool({
     password: 'postgrespw',
     port: 49153,
 })
+// Rooms
 
+pool.query(`SELECT * FROM public.rooms`).then(res => {
+    if (!res.rowCount) return false;
+    res.rows.forEach((el) => {
+        allRooms.set(el.id, new Map());
+    })
+})
+
+let allRooms = new Map();
+
+// 
 
 
 nextApp.prepare().then(() => {

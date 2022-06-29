@@ -10,12 +10,22 @@ export default class RoomChat extends React.Component {
             currentMessage: "",
             messages: [],
             votings: [],
-            onLoadVotings: []
+            onLoadVotings: [],
+            roomUsers: []
         }
         this.inputRef = React.createRef();
         this.chatBoxRef = React.createRef();
     }
     componentDidMount() {
+        socket.on("loadRoomUsers", data => {
+            console.log(data);
+            this.setState({
+                roomUsers: data.users
+            })
+        })
+        socket.emit("getRoomUsers", {
+            roomId: this.props.roomId
+        })
         socket.on("newMessage", data => {
             // console.log("newMessage");
             // console.log(this.props);
@@ -121,6 +131,13 @@ export default class RoomChat extends React.Component {
             <React.Fragment>
                 <div className='d-flex flex-row roomChatHeader'>
                     {this.props.name}
+                    {
+                        this.state.roomUsers.map((el, i) => {
+                            return (
+                                <span key={i+123} className="badge bg-secondary">{el}</span>
+                            )
+                        })
+                    }
                     <button type="button" className="btn btn-primary" onClick={() => this.props.switchModal("createvoting" + " " + this.props.roomId)}>Создать голосование</button>
                 </div>
                 <div className="d-flex flex-row roomChatBody" ref={this.chatBoxRef}>

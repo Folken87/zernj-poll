@@ -9,7 +9,8 @@ class Chat extends React.Component {
         super(props);
         this.state = {
             currentRoom: -1,
-            rooms: []
+            rooms: [],
+            filterRooms: false
         }
     }
     componentDidMount() {
@@ -36,9 +37,40 @@ class Chat extends React.Component {
         socket.emit("getRooms", []);
     }
     selectChat(id) {
+        if (this.state.currentRoom === -1 && id !== -1) {
+            socket.emit("joinRoom", {
+                roomId: id,
+                userId: this.props.userId,
+                name: this.props.name
+            })
+        } else if (this.state.currentRoom !== -1 && id === -1) {
+            socket.emit("leaveRoom", {
+                roomId: this.state.currentRoom,
+                userId: this.props.userId,
+                name: this.props.name
+            })
+        } else if (this.state.currentRoom !== -1 && id !== -1) {
+            socket.emit("joinRoom", {
+                roomId: id,
+                userId: this.props.userId,
+                name: this.props.name
+            })
+            socket.emit("leaveRoom", {
+                roomId: this.state.currentRoom,
+                userId: this.props.userId,
+                name: this.props.name
+            })
+        }
+
+
         this.setState({
             currentRoom: id !== this.state.currentRoom ? id : -1
         });
+    }
+    switchFilterRooms(val) {
+        this.setState({
+            filterRooms: val
+        })
     }
 
     render() {
@@ -52,10 +84,18 @@ class Chat extends React.Component {
                             <input type="text" className="form-control" placeholder="Поиск..." aria-label="Поиск..." aria-describedby="basic-addon1" />
                         </div>
                     </div>
+                    <div className='d-flex flex-row'>
+                        <div className='d-flex flex-column col-6'>
+                            <button type="button" className={`btn btn-outline-success ${!this.state.filterRooms && 'active'}`} onClick={() => this.switchFilterRooms(false)}>Все комнаты</button>
+                        </div>
+                        <div className='d-flex flex-column col-6'>
+                            <button type="button" className={`btn btn-outline-success ${this.state.filterRooms && 'active'}`} onClick={() => this.switchFilterRooms(true)}>Мои комнаты</button>
+                        </div>
+                    </div>
                     <div className='d-flex flex-row roomList flex-wrap align-content-start'>
                         <React.Fragment>
                             {
-                                this.state.rooms.map((el, i) => {
+                                this.state.rooms.filter((el) => this.state.filterRooms ? (el.owner === this.props.userId) : true).map((el, i) => {
                                     return <Room key={i + 100} img={el.img} name={el.name} onClick={() => this.selectChat(el.id)} cntMsg={el.cntMsg ? el.cntMsg : 0} />
                                 })
                             }
@@ -68,7 +108,7 @@ class Chat extends React.Component {
                 <div className='d-flex flex-column col-9 roomChat'>
                     {this.state.currentRoom !== -1
                         &&
-                        <RoomChat switchModal={(e)=>this.props.switchModal(e)} key={room.id} roomId={room.id} userId={this.props.userId} name={room.name} />
+                        <RoomChat switchModal={(e) => this.props.switchModal(e)} key={room.id} roomId={room.id} userId={this.props.userId} name={room.name} />
                     }
                 </div>
             </div>
