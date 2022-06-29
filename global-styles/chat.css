@@ -28,9 +28,11 @@
 }
 
 .roomChatHeader {
-    height: 6.481vmin;
+    height: 7.481vmin;
     border-bottom: 0.185vmin solid #eaeaea;
     padding: 1.389vmin 1.852vmin;
+    justify-content: space-between;
+    align-items: center;
 }
 .roomChatBody{
     overflow-y: auto;
@@ -61,14 +63,16 @@
     white-space: normal;
     word-break: break-all;
 }
-.message .messageAuthor {
+.message .my-message .messageAuthor  {
     justify-content: end;
 }
 .message .messageInfo {
-    justify-content: end;
     font-size: 1.296vmin;
     font-weight: 700;
     color: gray;
+}
+.message .my-message .messageInfo {
+    justify-content: end;
 }
 .message .my-message {
     background: #efefef;
@@ -97,4 +101,37 @@
     box-shadow: 0 0.093vmin 0.185vmin 0 rgb(0 0 0 / 10%);
     border-radius: 0.55rem;
     padding: 1.852vmin!important;
+}
+
+.voting {
+}
+
+.voting > div {
+    padding: 1.389vmin;
+    border-radius: 0.926vmin;
+    width: 70%;
+    background-color: rgb(205, 209, 239);
+}
+
+.voting .progress {
+    width: 75%;
+    height: fit-content;
+    margin-bottom: 0.926vmin;
+}
+
+
+.voting .progress .progress-bar {
+    padding: 0.926vmin 0px;
+}
+
+.voting .progress > span {
+    text-align: center;
+    width: 100%;
+    padding: 0.926vmin 0px;
+    transition-duration: 0.3s;
+}
+.voting .progress > span:hover {
+    cursor: pointer;
+    background-color: #b2bec8!important;
+    transition-duration: 0.3s;
 }

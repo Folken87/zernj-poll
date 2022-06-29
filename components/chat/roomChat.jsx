@@ -1,6 +1,7 @@
 import React from 'react';
 import socket from '../../context/socket';
 import Message from './Message';
+import Voting from './Voting';
 
 export default class RoomChat extends React.Component {
     constructor(props) {
@@ -49,7 +50,7 @@ export default class RoomChat extends React.Component {
         })
         socket.on("loadMessages", data => {
             this.setState({
-                messages: data.result.reverse()
+                messages: data.result
             }, () => this.scrollChatToBottom())
         })
         socket.emit("getMessages", this.props.roomId);
@@ -80,7 +81,7 @@ export default class RoomChat extends React.Component {
         }
     };
     getFormattedDate(str) {
-        let date = new Date(str);
+        return new Date(str).toLocaleTimeString("ru-RU");
         return date.getDate() +
             "/" + (date.getMonth() + 1) +
             "/" + date.getFullYear() +
@@ -93,17 +94,31 @@ export default class RoomChat extends React.Component {
             <React.Fragment>
                 <div className='d-flex flex-row roomChatHeader'>
                     {this.props.name}
+                    <button type="button" class="btn btn-primary" onClick={() => this.props.switchModal("createvoting" + " " + this.props.roomId)}>Создать голосование</button>
                 </div>
                 <div className="d-flex flex-row roomChatBody" ref={this.chatBoxRef}>
                     {this.state.messages
                         && this.state.messages.map((el, index) => {
-                            return <Message
-                                myMsg={this.props.userId === el.owner}
-                                key={index}
-                                info={this.getFormattedDate(el.sendDate)}
-                                text={el.textMessage}
-                                name={el.name ? el.name : ""}
-                            />
+                            console.log(el);
+                            switch (el.type) {
+                                case 0:
+                                    return <Message
+                                        myMsg={this.props.userId === el.owner}
+                                        key={index}
+                                        info={this.getFormattedDate(el.sendDate)}
+                                        text={el.textMessage}
+                                        name={el.name ? el.name : ""}
+                                    />
+                                case 1:
+                                    return <Voting 
+                                    myMsg={this.props.userId === el.owner}
+                                    userId={this.props.userId}
+                                    key={index}
+                                    name={el.name ? el.name : ""} 
+                                    votingId={parseInt(el.textMessage)}
+                                    />
+                            }
+
                         })}
                 </div>
                 <div className='d-flex flex-row roomChatInput'>

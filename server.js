@@ -51,7 +51,11 @@ io.on('connect', socket => {
 
     //авторизация
     socket.on("getMessages", roomId => {
-        const queryText = `SELECT public.messages.*, public.users.name FROM public.messages LEFT JOIN public.users ON public.messages.owner = public.users.id WHERE room = ${roomId}`
+        const queryText = `SELECT public.messages.*, \
+        public.users.name FROM public.messages \
+        LEFT JOIN public.users \
+        ON public.messages.owner = public.users.id WHERE room = ${roomId}\
+        ORDER BY "sendDate" ASC`
         pool.query(queryText, (err, res) => {
             socket.emit("loadMessages", {
                 result: res.rows
@@ -91,28 +95,68 @@ io.on('connect', socket => {
 
     //создание комнаты
     socket.on("createVoting", votingParams => {
-        const queryText = `INSERT INTO public.votings ("nameVote", "roomId") VALUES ('${votingParams.voteName}', '${votingParams.roomName}')`
-        pool.query(queryText, (err, res) => {
-            const queryText = `INSERT INTO public.answers ("answerValue", "idVote") VALUES ('${answerParams.answerName}', ${answerParams.voteId})`
-        pool.query(queryText, (err, res) => {
-            socket.emit("loadMessages", {
-                result: res.rows
-            });
-        });
-            socket.emit("loadMessages", {
-                result: res.rows
-            });
-        });
+        let queryText = `INSERT INTO public.votings ("nameVote", "roomId") \
+        VALUES ('${votingParams.name}', '${votingParams.roomId}') RETURNING *;`;
+        pool.query(queryText,)
+            .then(res => {
+                votingParams.answers.forEach(el => {
+                    let queryText = `INSERT INTO public.answers ("answerValue", "idVote") \
+                                VALUES ('${el.text}', ${res.rows[0].id})`
+                    pool.query(queryText).then(res2 => {
+                        // socket.emit("loadMessages", {
+                        //     result: res2.rows
+                        // });
+                    })
+                });
+                let queryText = `INSERT INTO public.messages (owner, room, "textMessage", type, "sendDate") \
+                VALUES (${votingParams.userId}, ${votingParams.roomId}, '${res.rows[0].id}', 1, NOW()) RETURNING "sendDate"`
+                pool.query(queryText).then(res2 => {
+                    io.emit("newMessage", {
+                        result: [{
+                            owner: votingParams.userId,
+                            room: votingParams.roomId,
+                            type: 1,
+                            textMessage: res.rows[0].id,
+                            sendDate: res2.rows[0].sendDate
+                        }]
+                    });
+                })
+                // socket.emit("loadMessages", {
+                //     result: res.rows
+                // });
+            })
     })
 
     //выбор пользователем пункта голосования
     socket.on("setAnswer", setAnswerParams => {
         const queryText = `INSERT INTO public.votes ("userId", "idVote", "idAnswer") VALUES (${setAnswerParams.userId}, ${setAnswerParams.voteId}, ${setAnswerParams.answerId})`
         pool.query(queryText, (err, res) => {
-            socket.emit("loadMessages", {
-                result: res.rows
-            });
+
         });
+    })
+    socket.on("getVoting", data => {
+        console.log(data);
+        pool.query(`\
+        SELECT "userId" FROM public.votes \
+        WHERE "userId" = ${data.userId} and "idVote" = ${data.id}
+        `).then(res2 => {
+            let voted = false;
+            if (res2.rowCount > 0) voted = true;
+            pool.query(`\
+            SELECT ans.id, vt."nameVote", COUNT(vts.id), \
+            ans."answerValue" FROM public.votings vt \
+            LEFT JOIN public.answers ans ON vt.id = ans."idVote" \
+            LEFT JOIN public.votes vts ON vt.id = vts."idVote" \
+            WHERE vt.id = ${data.id} \
+            GROUP BY ans.id, vt."nameVote", ans."answerValue" \
+            `).then(res => {
+                socket.emit("loadVoting", {
+                    voted: voted,
+                    rows: res.rows
+                })
+            })
+        })
+
     })
 })
 

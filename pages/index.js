@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import Auth from '../components/Auth/Auth';
 import Chat from '../components/chat/Chat';
 import CreateRoom from '../components/chat/CreateRoom';
+import CreateVoting from '../components/chat/CreateVoting';
 
 export default class Main extends React.Component {
     constructor(props) {
@@ -29,15 +30,23 @@ export default class Main extends React.Component {
         })
     }
     switchModal(str) {
+        console.log(str);
         this.setState({
             modal: str
         })
     }
     render() {
         let modal = null;
-        switch (this.state.modal) {
+        let ss = this.state.modal.split(" ");
+        let str = "";
+        if (ss.length > 1) str = ss[0];
+        else str = this.state.modal;
+        switch (str) {
             case "createroom":
                 modal = <CreateRoom userId={this.state.id} switchModal={(e) => this.switchModal(e)} />;
+                break;
+            case "createvoting":
+                modal = <CreateVoting userId={this.state.id} roomId={parseInt(ss[1])} switchModal={(e) => this.switchModal(e)} />;
                 break;
         }
         return (

@@ -62,13 +62,13 @@ class Chat extends React.Component {
                         </React.Fragment>
                     </div>
                     <div className="d-flex flex-row justify-content-center">
-                        <button type="button" class="btn btn-success" onClick={() => this.props.switchModal("createroom")}>Создать комнату</button>
+                        <button type="button" className="btn btn-success" onClick={() => this.props.switchModal("createroom")}>Создать комнату</button>
                     </div>
                 </div>
                 <div className='d-flex flex-column col-9 roomChat'>
                     {this.state.currentRoom !== -1
                         &&
-                        <RoomChat key={room.id} roomId={room.id} userId={this.props.userId} name={room.name} />
+                        <RoomChat switchModal={(e)=>this.props.switchModal(e)} key={room.id} roomId={room.id} userId={this.props.userId} name={room.name} />
                     }
                 </div>
             </div>
