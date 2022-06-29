@@ -50,6 +50,27 @@ io.on('connect', socket => {
             // pool.end(() => { })
         });
     })
+
+    //авторизация
+    socket.on("getMessages", roomId => {
+        const queryText = 'SELECT * FROM public.messages WHERE room = $1'
+        pool.query(queryText, roomId, (err, res) => {
+            socket.emit("loadMessages", {
+                result: res.rows
+            });
+            // pool.end(() => { })
+        });
+    })
+
+    socket.on("sendMsg", msgParams => {
+        const queryText = `INSERT public.messages (owner, room, textMessage) VALUES (${msgParams.userId}, ${msgParams.roomId}, '${msgParams.message}') WHERE room = $1`
+        pool.query(queryText, roomId, (err, res) => {
+            // socket.emit("loadMessages", {
+            //     result: res.rows
+            // });
+            // pool.end(() => { })
+        });
+    })
 })
 
 const pool = new Pool({
