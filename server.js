@@ -62,8 +62,9 @@ io.on('connect', socket => {
         });
     })
 
+
+    //отправка сообщений
     socket.on("sendMsg", msgParams => {
-        let date =new Date();
         const queryText = `INSERT INTO public.messages (owner, room, "textMessage", "sendDate") VALUES (${msgParams.userId}, ${msgParams.roomId}, '${msgParams.message}', NOW()) RETURNING "sendDate"`
         pool.query(queryText, (err, res) => {
             io.emit("newMessage", {
@@ -73,6 +74,19 @@ io.on('connect', socket => {
                     textMessage: msgParams.message,
                     sendDate: res.rows[0].sendDate
                 }]
+            });
+        });
+    })
+
+    //создание комнаты
+    socket.on("createRoom", roomParams => {
+        const queryText = `INSERT INTO public.rooms (owner, name, active) VALUES (${roomParams.userId}, ${roomParams.roomName}, true)`
+        pool.query(queryText, (err, res) => {
+            pool.query('SELECT * FROM public.rooms', (err, res) => {
+                socket.emit("loadRooms", {
+                    rooms: res.rows
+                });
+                // pool.end(() => { })
             });
         });
     })
