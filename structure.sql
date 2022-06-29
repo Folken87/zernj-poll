@@ -111,3 +111,8 @@ ALTER TABLE IF EXISTS public.votes
 --добавил связку id комнаты к таблице голосований
 ALTER TABLE IF EXISTS public.votings
     ADD COLUMN "roomId" bigint NOT NULL;
+
+
+--добавил столбец "Тип сообщения" в messages
+ALTER TABLE IF EXISTS public.messages
+    ADD COLUMN type integer NOT NULL DEFAULT 0;
