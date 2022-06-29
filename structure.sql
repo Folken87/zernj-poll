@@ -107,3 +107,7 @@ CREATE TABLE public.votes
 
 ALTER TABLE IF EXISTS public.votes
     OWNER to postgres;
+
+--добавил связку id комнаты к таблице голосований
+ALTER TABLE IF EXISTS public.votings
+    ADD COLUMN "roomId" bigint NOT NULL;
