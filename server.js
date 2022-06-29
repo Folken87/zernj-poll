@@ -53,8 +53,8 @@ io.on('connect', socket => {
 
     //авторизация
     socket.on("getMessages", roomId => {
-        const queryText = 'SELECT * FROM public.messages WHERE room = $1'
-        pool.query(queryText, roomId, (err, res) => {
+        const queryText = `SELECT * FROM public.messages WHERE room = ${roomId}`
+        pool.query(queryText, (err, res) => {
             socket.emit("loadMessages", {
                 result: res.rows
             });
@@ -63,8 +63,11 @@ io.on('connect', socket => {
     })
 
     socket.on("sendMsg", msgParams => {
-        const queryText = `INSERT public.messages (owner, room, textMessage) VALUES (${msgParams.userId}, ${msgParams.roomId}, '${msgParams.message}') WHERE room = $1`
-        pool.query(queryText, roomId, (err, res) => {
+        console.log(msgParams);
+        const queryText = `INSERT INTO public.messages (owner, room, "textMessage", "sendDate") VALUES (${msgParams.userId}, ${msgParams.roomId}, '${msgParams.message}', NOW())`
+        console.log(queryText);
+        pool.query(queryText, (err, res) => {
+            console.log(err);
             // socket.emit("loadMessages", {
             //     result: res.rows
             // });

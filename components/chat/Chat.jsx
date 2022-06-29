@@ -29,13 +29,7 @@ class Chat extends React.Component {
         }
     }
     componentDidMount() {
-        // socket.on('now', data => {
-        //     this.setState({
-        //         message: data.message
-        //     })
-        // })
         socket.on("loadRooms", data => {
-            console.log(data.rooms);
             this.setState({
                 rooms: data.rooms
             })
@@ -63,7 +57,7 @@ class Chat extends React.Component {
                         <React.Fragment>
                             {
                                 this.state.rooms.map((el, i) => {
-                                    return <Room img={el.img} name={el.name} onClick={() => this.selectChat(el.id)} />
+                                    return <Room key={i+100} img={el.img} name={el.name} onClick={() => this.selectChat(el.id)} />
                                 })
                             }
                         </React.Fragment>
@@ -72,7 +66,7 @@ class Chat extends React.Component {
                 <div className='d-flex flex-column col-9 roomChat'>
                     {this.state.currentRoom !== -1
                         &&
-                        <RoomChat name={room.name} />
+                        <RoomChat roomId={room.id} userId={this.props.userId} name={room.name} />
                     }
                 </div>
             </div>

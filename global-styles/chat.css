@@ -23,6 +23,7 @@
 }
 
 .roomChat {
+    position: relative;
     border-left: 0.185vmin solid #eaeaea;
 }
 
@@ -32,36 +33,36 @@
     padding: 1.389vmin 1.852vmin;
 }
 .roomChatBody{
+    overflow-y: auto;
     padding: 1.389vmin 1.852vmin;
     flex-wrap: wrap;
-}
-.message {
-    width: 100%;
-}
-.my-message {
-    background: #efefef
+    height: 44.741vmin;
 }
 
-.my-message:after {
-    bottom: 100%;
-    left: 30px;
-    border: solid transparent;
-    content: " ";
-    height: 0;
-    width: 0;
+.roomChatInput {
+    padding: 1.389vmin 1.852vmin;
+    bottom: 0;
     position: absolute;
-    pointer-events: none;
-    border-bottom-color: #efefef;
-    border-width: 10px;
-    margin-left: -10px
+    width: 100%;
+}
+
+.message {
+    width: 100%;
+    margin-bottom: 2.778vmin;
+}
+
+.message .messageText {
+    display: inline-block!important;
+    padding: 1.667vmin 1.852vmin;
+    line-height: 2.407vmin;
+    font-size: 1.681vmin;
+    border-radius: 0.648vmin;
+}
+.my-message {
+    background: #efefef;
 }
 
 .other-message {
     background: #e8f1f3;
-    text-align: right
-}
-
-.other-message:after {
-    border-bottom-color: #e8f1f3;
-    left: 93%
+    right: 0;
 }
