@@ -88,6 +88,32 @@ io.on('connect', socket => {
             });
         });
     })
+
+    //создание комнаты
+    socket.on("createVoting", votingParams => {
+        const queryText = `INSERT INTO public.votings ("nameVote", "roomId") VALUES ('${votingParams.voteName}', '${votingParams.roomName}')`
+        pool.query(queryText, (err, res) => {
+            const queryText = `INSERT INTO public.answers ("answerValue", "idVote") VALUES ('${answerParams.answerName}', ${answerParams.voteId})`
+        pool.query(queryText, (err, res) => {
+            socket.emit("loadMessages", {
+                result: res.rows
+            });
+        });
+            socket.emit("loadMessages", {
+                result: res.rows
+            });
+        });
+    })
+
+    //выбор пользователем пункта голосования
+    socket.on("setAnswer", setAnswerParams => {
+        const queryText = `INSERT INTO public.votes ("userId", "idVote", "idAnswer") VALUES (${setAnswerParams.userId}, ${setAnswerParams.voteId}, ${setAnswerParams.answerId})`
+        pool.query(queryText, (err, res) => {
+            socket.emit("loadMessages", {
+                result: res.rows
+            });
+        });
+    })
 })
 
 const pool = new Pool({
