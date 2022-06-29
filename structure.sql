@@ -123,3 +123,7 @@ ALTER TABLE IF EXISTS public.answers DROP CONSTRAINT IF EXISTS answers_pkey;
 
 ALTER TABLE IF EXISTS public.answers
     ADD PRIMARY KEY (id);
+
+--удалил PK у таблицы votes
+ALTER TABLE IF EXISTS public.votes DROP CONSTRAINT IF EXISTS votes_pkey;
+
