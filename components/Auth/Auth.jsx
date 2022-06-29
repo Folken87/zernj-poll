@@ -16,20 +16,20 @@ export default class Auth extends React.Component {
         })
     }
 
-    changeLogin(value){
+    changeLogin(value) {
         this.setState({
             login: value
         })
     }
-    changePassword(value){
+    changePassword(value) {
         this.setState({
             password: value
         })
     }
-    clickLogin(){
+    clickLogin() {
         socket.emit("auth", [this.state.login, this.state.password]);
     }
-    clickRegister(){
+    clickRegister() {
         socket.emit("registration", [this.state.login, this.state.password]);
     }
 
@@ -44,16 +44,16 @@ export default class Auth extends React.Component {
                 <div className="d-flex flex-column h-100 p-3 justify-content-center align-items-center">
                     {this.state.currentTab == 0 ?
                         <>
-                            <input key={0} autoComplete="new-password" type="text" name="" className="form-control" placeholder="Логин" onChange={(e)=>this.changeLogin(e.target.value)} />
-                            <input key={1} autoComplete="new-password" type="password" name="" className="form-control" placeholder="Пароль" onChange={(e)=>this.changePassword(e.target.value)} />
-                            <button className="btn btn-dark btn-block" onClick={()=>this.clickLogin()}>Авторизоваться</button>
+                            <input key={0} autoComplete="new-password" type="text" name="" className="form-control" placeholder="Логин" onChange={(e) => this.changeLogin(e.target.value)} />
+                            <input key={1} autoComplete="new-password" type="password" name="" className="form-control" placeholder="Пароль" onChange={(e) => this.changePassword(e.target.value)} />
+                            <button className="btn btn-dark btn-block" onClick={() => this.clickLogin()}>Авторизоваться</button>
 
                         </> :
                         <>
-                            <input key={2} autoComplete="new-password" type="text" name="" className="form-control" placeholder="Логин" />
-                            <input key={3} autoComplete="new-password" type="password" name="" className="form-control" placeholder="Пароль" />
+                            <input key={2} autoComplete="new-password" type="text" name="" className="form-control" placeholder="Логин" onChange={(e) => this.changeLogin(e.target.value)} />
+                            <input key={3} autoComplete="new-password" type="password" name="" className="form-control" placeholder="Пароль" onChange={(e) => this.changePassword(e.target.value)} />
                             <input key={4} autoComplete="new-password" type="password" name="" className="form-control" placeholder="Повторите пароль" />
-                            <button className="btn btn-dark btn-block">Зарегистрироваться</button>
+                            <button className="btn btn-dark btn-block" onClick={() => this.clickRegister()}>Зарегистрироваться</button>
                         </>}
                 </div>
             </div>

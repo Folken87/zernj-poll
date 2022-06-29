@@ -58,6 +58,8 @@
     line-height: 2.407vmin;
     font-size: 1.681vmin;
     border-radius: 0.648vmin;
+    white-space: normal;
+    word-break: break-all;
 }
 .message .messageAuthor {
     justify-content: end;

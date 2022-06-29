@@ -18,6 +18,7 @@ export default class Main extends React.Component {
     }
     componentDidMount() {
         socket.on("loadAuth", data => {
+            console.log(data);
             if (data.result.length == 0) return false;
             let acc = data.result[0];
             this.setState({

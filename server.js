@@ -34,21 +34,19 @@ io.on('connect', socket => {
 
     //регистрация
     socket.on("registration", authParams => {
-        const queryText = `DO \
-        $do$ \
-        BEGIN \
-            IF EXISTS (SELECT FROM public.users WHERE name = '$1') THEN \
-                INSERT INTO public.users(name, role, password) \
-                    VALUES ('$1', '1', '$2'); \
-            END IF; \
-        END \
-        $do$;`
-        pool.query(queryText, authParams, (err, res) => {
-            socket.emit("loadAuth", {
-                result: res.rows
-            });
-            // pool.end(() => { })
+        pool.query(`SELECT * FROM public.users WHERE name ='${authParams[0]}'`).then(res => {
+            if (res.rowCount > 0) {
+                return false;
+            }
+            pool
+                .query(`INSERT INTO public.users(name, role, password) VALUES ('${authParams[0]}', '1', '${authParams[1]}') RETURNING *;`)
+                .then(res2 => {
+                    socket.emit("loadAuth", {
+                        result: res2.rows
+                    });
+                });
         });
+
     })
 
     //авторизация
@@ -70,7 +68,7 @@ io.on('connect', socket => {
             io.emit("newMessage", {
                 result: [{
                     owner: msgParams.userId,
-                    room: msgParams.roomId, 
+                    room: msgParams.roomId,
                     textMessage: msgParams.message,
                     sendDate: res.rows[0].sendDate
                 }]
@@ -82,9 +80,9 @@ io.on('connect', socket => {
     socket.on("createRoom", roomParams => {
         const queryText = `INSERT INTO public.rooms (owner, name, active) VALUES (${roomParams.userId}, '${roomParams.roomName}', true)`
         pool.query(queryText, (err, res) => {
-            pool.query('SELECT * FROM public.rooms', (err, res) => {
+            pool.query('SELECT * FROM public.rooms', (err2, res2) => {
                 socket.emit("loadRooms", {
-                    rooms: res.rows
+                    rooms: res2.rows
                 });
                 // pool.end(() => { })
             });
