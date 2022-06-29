@@ -13,6 +13,21 @@ class Chat extends React.Component {
         }
     }
     componentDidMount() {
+        socket.on("newMessage", data => {
+            console.log(data);
+            let res = data.result[0];
+            let room = this.state.rooms.findIndex(el => el.id === res.room);
+            if (room === -1) return false;
+            if (this.state.currentRoom === res.id) return false;
+            if (this.state.rooms[room].cntMsg) {
+                this.state.rooms[room].cntMsg++;
+            } else {
+                this.state.rooms[room].cntMsg = 0;
+            }
+            this.setState({
+                rooms: this.state.rooms
+            })
+        })
         socket.on("loadRooms", data => {
             this.setState({
                 rooms: data.rooms
@@ -41,10 +56,13 @@ class Chat extends React.Component {
                         <React.Fragment>
                             {
                                 this.state.rooms.map((el, i) => {
-                                    return <Room key={i+100} img={el.img} name={el.name} onClick={() => this.selectChat(el.id)} />
+                                    return <Room key={i + 100} img={el.img} name={el.name} onClick={() => this.selectChat(el.id)} cntMsg={el.cntMsg ? el.cntMsg : 0} />
                                 })
                             }
                         </React.Fragment>
+                    </div>
+                    <div className="d-flex flex-row justify-content-center">
+                        <button type="button" class="btn btn-success" onClick={() => this.props.switchModal("createroom")}>Создать комнату</button>
                     </div>
                 </div>
                 <div className='d-flex flex-column col-9 roomChat'>

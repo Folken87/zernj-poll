@@ -80,7 +80,7 @@ io.on('connect', socket => {
 
     //создание комнаты
     socket.on("createRoom", roomParams => {
-        const queryText = `INSERT INTO public.rooms (owner, name, active) VALUES (${roomParams.userId}, ${roomParams.roomName}, true)`
+        const queryText = `INSERT INTO public.rooms (owner, name, active) VALUES (${roomParams.userId}, '${roomParams.roomName}', true)`
         pool.query(queryText, (err, res) => {
             pool.query('SELECT * FROM public.rooms', (err, res) => {
                 socket.emit("loadRooms", {

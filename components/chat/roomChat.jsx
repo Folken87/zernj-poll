@@ -40,10 +40,8 @@ export default class RoomChat extends React.Component {
     }
     componentDidMount() {
         socket.on("newMessage", data => {
-            console.log(data);
             if (data.result[0].room !== this.props.roomId) return false;
 
-            console.log(this.props.roomId);
             this.state.messages.push(data.result[0])
             this.setState({
                 messages: this.state.messages
