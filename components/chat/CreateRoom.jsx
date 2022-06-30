@@ -1,37 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import socket from '../../context/socket';
+import { useAtom } from 'jotai';
 
-export default class CreateRoom extends React.Component {
-    constructor(props) {
-        super(props);
-        this.inputRef = React.createRef();
-    }
-    createNewRoom() {
+import {
+    userAtom,
+    modalAtom,
+} from '../../store/store';
+
+export default function CreateRoom() {
+    const [user, setUser] = useAtom(userAtom);
+    const [roomName, setRoomName] = useState("");
+    const [modal, setModal] = useAtom(modalAtom);
+    function createNewRoom() {
         socket.emit("createRoom", {
-            userId: this.props.userId,
-            roomName: this.inputRef.current.value
+            userId: user.id,
+            roomName: roomName
         });
-        this.props.switchModal("");
+        setModal("");
     }
-    render() {
-        return (
-            <div className='modalGlobal'>
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Создание новой комнаты</h5>
-                    </div>
-                    <div class="modal-body">
-                        <div class="input-group mb-3">
-                            <span class="input-group-text" id="inputGroup-sizing-default">Название комнаты</span>
-                            <input ref={this.inputRef} type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" onClick={() => this.props.switchModal("")}>Отмена</button>
-                        <button type="button" class="btn btn-primary" onClick={() => this.createNewRoom()}>Создать</button>
+    return (
+        <div className='modalGlobal'>
+            <div className="modal-content">
+                <div className="modal-header">
+                    <h5 className="modal-title">Создание новой комнаты</h5>
+                </div>
+                <div className="modal-body">
+                    <div className="input-group mb-3">
+                        <span className="input-group-text" id="inputGroup-sizing-default">Название комнаты</span>
+                        <input type="text" className="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" onChange={(e) => setRoomName(e.target.value)} />
                     </div>
                 </div>
+                <div className="modal-footer">
+                    <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={() => setModal("")}>Отмена</button>
+                    <button type="button" className="btn btn-primary" onClick={() => createNewRoom()}>Создать</button>
+                </div>
             </div>
-        )
-    }
+        </div>
+    )
 }

@@ -23,7 +23,7 @@ io.on('connect', socket => {
 
     //авторизация
     socket.on("auth", authParams => {
-        const queryText = 'SELECT id, name FROM public.users WHERE name = $1 AND password = $2'
+        const queryText = 'SELECT id, name, role FROM public.users WHERE name = $1 AND password = $2'
         pool.query(queryText, authParams, (err, res) => {
             socket.emit("loadAuth", {
                 result: res.rows
@@ -67,13 +67,15 @@ io.on('connect', socket => {
 
     //отправка сообщений
     socket.on("sendMsg", msgParams => {
-        const queryText = `INSERT INTO public.messages (owner, room, "textMessage", "sendDate") VALUES (${msgParams.userId}, ${msgParams.roomId}, '${msgParams.message}', NOW()) RETURNING "sendDate"`
+        const queryText = `INSERT INTO public.messages (owner, room, "textMessage", "sendDate") VALUES (${msgParams.userId}, ${msgParams.roomId}, '${msgParams.message}', NOW()) RETURNING *`
         pool.query(queryText, (err, res) => {
             io.emit("newMessage", {
                 result: [{
+                    id: res.rows[0].id,
+                    name: msgParams.name,
+                    textMessage: msgParams.message,
                     owner: msgParams.userId,
                     room: msgParams.roomId,
-                    textMessage: msgParams.message,
                     sendDate: res.rows[0].sendDate,
                     type: 0
                 }]
@@ -159,6 +161,7 @@ io.on('connect', socket => {
         //     roomId: data.roomId,
         //     arr: arr
         // })
+        insertToLog(data.userId, data.roomId, "зашёл в комнату");
     })
     socket.on("leaveRoom", data => {
         let usersMap = allRooms.get(data.roomId);
@@ -166,6 +169,7 @@ io.on('connect', socket => {
             usersMap.delete(data.userId);
         }
         allRooms.set(data.roomId, usersMap);
+        insertToLog(data.userId, data.roomId, "вышел из комнаты");
 
         io.emit("updateRoom", {
             roomId: data.roomId,
@@ -175,11 +179,18 @@ io.on('connect', socket => {
 
     socket.on("getRoomUsers", data => {
         let usersMap = allRooms.get(data.roomId);
-        console.log(usersMap);
-        console.log(Array.from(usersMap.values()));
         socket.emit("loadRoomUsers", { users: Array.from(usersMap.values()) });
     })
-
+    socket.on("getHistoryRoom", data => {
+        pool.query(`SELECT us.name, lg.* FROM public.logs lg
+        LEFT JOIN public.users us on lg."userId" = us.id
+        WHERE "roomId" = ${data.roomId}
+        ORDER BY id ASC`).then(res => {
+            socket.emit("loadHistoryRoom", {
+                result: res.rows
+            })
+        })
+    })
 })
 
 function getVoting(socket, data) {
@@ -203,6 +214,13 @@ function getVoting(socket, data) {
             })
         })
     })
+}
+
+function insertToLog(userId, roomId, text) {
+    pool.query(`INSERT INTO public.logs ("userId", "roomId", text, date) \
+    VALUES (${userId}, ${roomId}, '${text}', NOW())`).then(res => {
+
+    });
 }
 
 const pool = new Pool({

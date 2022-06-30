@@ -35,9 +35,10 @@
     align-items: center;
 }
 .roomChatBody{
+    width: 100%;
     overflow-y: auto;
     padding: 1.389vmin 1.852vmin;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
     height: 44.741vmin;
     /* align-content: flex-end; */
 }
