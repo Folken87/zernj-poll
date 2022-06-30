@@ -124,6 +124,7 @@ ALTER TABLE IF EXISTS public.answers DROP CONSTRAINT IF EXISTS answers_pkey;
 ALTER TABLE IF EXISTS public.answers
     ADD PRIMARY KEY (id);
 
+<<<<<<< HEAD
 
 -- логи
 CREATE TABLE IF NOT EXISTS public.logs
@@ -139,3 +140,8 @@ ALTER TABLE public.logs
     OWNER to postgres;
 ALTER TABLE public.logs
     ADD COLUMN date timestamp without time zone;
+=======
+--удалил PK у таблицы votes
+ALTER TABLE IF EXISTS public.votes DROP CONSTRAINT IF EXISTS votes_pkey;
+
+>>>>>>> 692774c99eb9a13bbd4205f129d891ce341d0c24
