@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node server.js",
     "build1": "next dev",
-    "build": "nodemon server.js && next dev",
+    "build": "node server.js && next dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
