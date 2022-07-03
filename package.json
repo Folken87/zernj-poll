@@ -6,9 +6,9 @@
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
-    "tt": "nodemon server.js && next dev",
+    "tt": "nodemon server.js && next build",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start" : "node server.js && next start"
+    "start": "node server.js && next start"
   },
   "repository": {
     "type": "git",
