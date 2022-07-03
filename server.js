@@ -8,7 +8,7 @@ const dev = process.env.NODE_ENV != 'production';
 const nextApp = next({ dev });
 const nextHandler = nextApp.getRequestHandler();
 
-let port = 3000;
+let port = 80;
 
 io.on('connect', socket => {
     console.log("User connected!");
