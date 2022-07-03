@@ -23,6 +23,7 @@ io.on('connect', socket => {
 
     //авторизация
     socket.on("auth", authParams => {
+        console.log(authParams)
         const queryText = 'SELECT id, name, role FROM public.users WHERE name = $1 AND password = $2'
         pool.query(queryText, authParams, (err, res) => {
             socket.emit("loadAuth", {
