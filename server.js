@@ -224,11 +224,11 @@ function insertToLog(userId, roomId, text) {
 }
 
 const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'zernjchat',
-    password: 'postgrespw',
-    port: 49153,
+    user: 'rxnmtfiqesasji',
+    host: 'ec2-52-19-96-181.eu-west-1.compute.amazonaws.com',
+    database: 'd1gkcohs4hvmon',
+    password: '466004336e1915dde763ab6ce4b9dcaf11584f02f211bb7a55b92356f6857890',
+    port: 5432,
 })
 // Rooms
 
