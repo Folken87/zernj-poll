@@ -5,10 +5,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "node server.js",
-    "build": "next build",
+    "build": "nodemon server.js && next build",
     "tt": "nodemon server.js && next dev",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "NODE_ENV=production node server.js"
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
