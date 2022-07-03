@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "node server.js",
-    "build": "npm run tt",
+    "build": "npm run build && node server.js && next build",
     "tt": "nodemon server.js && next dev",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start" : "node server.js && next start"
