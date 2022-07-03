@@ -5,8 +5,11 @@
   "main": "index.js",
   "scripts": {
     "dev": "node server.js",
+    "build": "next build",
+    "start": "node server.js && next start -p $PORT",
+    "heroku-postbuild": "npm run build",
     "build1": "next dev",
-    "build": "node server.js && next dev",
+    "build2": "node server.js && next dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
