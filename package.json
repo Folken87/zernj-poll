@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "node server.js",
-    "build": "next build",
+    "build": "next dev",
     "tt": "nodemon server.js && next dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
